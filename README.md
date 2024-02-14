@@ -4,9 +4,8 @@ A json parser written in golang. From this challenge [here](https://codingchalle
 
 ---
 
-1. Using a stack to match brackets
-2. Pushing Open brakcets and popping off closed ones.
-3. Mismatch is invalid JSON else valid JSON.
+1. Iterate over the inputt to create a slice of tokens
+2. Lexer over these tokens to check if valid JSON
 
 ---
 

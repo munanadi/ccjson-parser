@@ -6,24 +6,24 @@ import (
 	"sync"
 )
 
-type Stack struct {
+type Stack[T comparable] struct {
 	top    int
 	mu     *sync.RWMutex
 	length int
-	stack  []byte
+	stack  []T
 }
 
-func NewStack(length int) *Stack {
-	s := &Stack{
+func NewStack[T comparable](length int) *Stack[T] {
+	s := &Stack[T]{
 		top:    -1,
 		mu:     &sync.RWMutex{},
 		length: length,
-		stack:  make([]byte, 0, length),
+		stack:  make([]T, 0, length),
 	}
 	return s
 }
 
-func (s *Stack) AddToStack(element byte) error {
+func (s *Stack[T]) AddToStack(element T) error {
 	// handle overflow
 	if s.top == s.length {
 		return errors.New("overflow")
@@ -33,10 +33,12 @@ func (s *Stack) AddToStack(element byte) error {
 	return nil
 }
 
-func (s *Stack) RemoveFromStack() (byte, error) {
+func (s *Stack[T]) RemoveFromStack() (T, error) {
+	var newValue T
+
 	// handle underflow
 	if s.top == -1 {
-		return byte(0), errors.New("underflow")
+		return newValue, errors.New("underflow")
 	}
 	s.top -= 1
 	topElement := s.stack[len(s.stack)-1]
@@ -44,20 +46,24 @@ func (s *Stack) RemoveFromStack() (byte, error) {
 	return topElement, nil
 }
 
-func (s *Stack) PrintStack() {
+func (s *Stack[T]) PrintStack() {
 	fmt.Println("Printing Stack...")
-	fmt.Println(s.stack)
+	for _, v := range s.stack {
+		fmt.Printf("%v ", v)
+	}
 	fmt.Println("")
 }
 
-func (s *Stack) Length() int {
+func (s *Stack[T]) Length() int {
 	return s.top
 }
 
-func (s *Stack) Top() byte {
+func (s *Stack[T]) Top() T {
+
+	var newValue T
 
 	if s.top == -1 {
-		return byte(0)
+		return newValue
 	}
 
 	topElement := s.stack[s.top]
